@@ -68,9 +68,13 @@ hadcet.all.clean |>
   ggplot(aes(x = obs_doy, y = mean_temp_roll7, group = as.factor(obs_year))) +
   geom_line(alpha = 0.1, show.legend = FALSE) +
   geom_line(data = hadcet.2023.mean, colour = "red") +
+<<<<<<< HEAD
   geom_line(data = hadcet.2013.mean, colour = "blue", alpha = 0.3) +
   labs(title = "Mean Daily Temperature, 1940-2023"
        , subtitle = "30 day rolling average"
        , x = "Day of Year"
        , y = "Temperature (°C)"
        , caption = "source: Hadley Centre Central England Temperature Series: www.metoffice.gov.uk/hadobs/hadcet/data/download.html")
+=======
+  geom_line(data = hadcet.2013.mean, colour = "blue", alpha = 0.3)
+>>>>>>> c805531d31bd98db95f707b28cc7fed3459eb97a
