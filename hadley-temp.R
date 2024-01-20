@@ -16,7 +16,7 @@ hadcet.read.fn <- function(url) {
            , col.names = c('obs_temp'))
 }
 
-hadcet.clean.fn <- function(tbl) {
+hadcet.clean.fn <- function(tbl, roll = 29) {
   tbl |>
     as_tibble() |>
     rename(obs_date = row.names) |>
@@ -24,7 +24,7 @@ hadcet.clean.fn <- function(tbl) {
            , obs_temp = as.numeric(obs_temp)
            , obs_year = year(obs_date)
            , obs_doy = yday(obs_date)
-           , obs_temp_roll7 = slide_dbl(obs_temp, mean, .before = 6, .complete = TRUE))
+           , obs_temp_roll = slide_dbl(obs_temp, mean, .before = roll, .complete = TRUE))
 }
 
 hadcet.mean.raw <- hadcet.read.fn(hadcet.mean.url)
@@ -39,26 +39,33 @@ hadcet.max.clean <- hadcet.clean.fn(hadcet.max.raw)
 hadcet.all.clean <-
   hadcet.mean.clean |>
   rename(mean_temp = obs_temp
-         , mean_temp_roll7 = obs_temp_roll7) |>
+         , mean_temp_roll7 = obs_temp_roll) |>
   full_join(hadcet.min.clean |> 
-              select(obs_date, obs_temp, obs_temp_roll7) |> 
+              select(obs_date, obs_temp, obs_temp_roll) |> 
               rename(min_temp = obs_temp
-                     , min_temp_roll7 = obs_temp_roll7)
+                     , min_temp_roll7 = obs_temp_roll)
             , by = "obs_date") |>
   full_join(hadcet.max.clean |>
-              select(obs_date, obs_temp, obs_temp_roll7) |>
+              select(obs_date, obs_temp, obs_temp_roll) |>
               rename(max_temp = obs_temp
-                     , min_temp_roll7 = obs_temp_roll7)
+                     , min_temp_roll7 = obs_temp_roll)
             , by = "obs_date")
+
+hadcet.2013.mean <- hadcet.mean.clean |>
+  filter(obs_year >= 2013
+         , obs_year <= 2022) |>
+  rename(mean_temp = obs_temp
+         , mean_temp_roll7 = obs_temp_roll)
 
 hadcet.2023.mean <- hadcet.mean.clean |>
   filter(obs_year == 2023) |>
   rename(mean_temp = obs_temp
-         , mean_temp_roll7 = obs_temp_roll7)
+         , mean_temp_roll7 = obs_temp_roll)
 
 hadcet.all.clean |>
   filter(obs_year >= 1940
-         , obs_year < 2023) |>
+         , obs_year < 2013) |>
   ggplot(aes(x = obs_doy, y = mean_temp_roll7, group = as.factor(obs_year))) +
   geom_line(alpha = 0.1, show.legend = FALSE) +
-  geom_line(data = hadcet.2023.mean, colour = "red")
+  geom_line(data = hadcet.2023.mean, colour = "red") +
+  geom_line(data = hadcet.2013.mean, colour = "blue", alpha = 0.3)
