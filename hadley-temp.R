@@ -24,7 +24,8 @@ hadcet.clean.fn <- function(tbl, roll = 29) {
            , obs_temp = as.numeric(obs_temp)
            , obs_year = year(obs_date)
            , obs_doy = yday(obs_date)
-           , obs_temp_roll = slide_dbl(obs_temp, mean, .before = roll, .complete = TRUE))
+           , obs_temp_roll = slide_dbl(obs_temp, mean, .before = roll, .complete = TRUE)
+           , obs_caldoy = as.Date(obs_doy - 1, origin = "1940-01-01"))
 }
 
 hadcet.mean.raw <- hadcet.read.fn(hadcet.mean.url)
@@ -36,8 +37,7 @@ hadcet.min.clean <- hadcet.clean.fn(hadcet.min.raw)
 hadcet.max.raw <- hadcet.read.fn(hadcet.max.url)
 hadcet.max.clean <- hadcet.clean.fn(hadcet.max.raw)
 
-hadcet.all.clean <-
-  hadcet.mean.clean |>
+hadcet.all.clean <- hadcet.mean.clean |>
   rename(mean_temp = obs_temp
          , mean_temp_roll7 = obs_temp_roll) |>
   full_join(hadcet.min.clean |> 
@@ -65,16 +65,13 @@ hadcet.2023.mean <- hadcet.mean.clean |>
 hadcet.all.clean |>
   filter(obs_year >= 1940
          , obs_year < 2013) |>
-  ggplot(aes(x = obs_doy, y = mean_temp_roll7, group = as.factor(obs_year))) +
+  ggplot(aes(x = obs_caldoy, y = mean_temp_roll7, group = as.factor(obs_year))) +
   geom_line(alpha = 0.1, show.legend = FALSE) +
   geom_line(data = hadcet.2023.mean, colour = "red") +
-<<<<<<< HEAD
   geom_line(data = hadcet.2013.mean, colour = "blue", alpha = 0.3) +
+  scale_x_date(date_labels = "%d %b", date_breaks = "1 month") +
   labs(title = "Mean Daily Temperature, 1940-2023"
        , subtitle = "30 day rolling average"
        , x = "Day of Year"
        , y = "Temperature (°C)"
        , caption = "source: Hadley Centre Central England Temperature Series: www.metoffice.gov.uk/hadobs/hadcet/data/download.html")
-=======
-  geom_line(data = hadcet.2013.mean, colour = "blue", alpha = 0.3)
->>>>>>> c805531d31bd98db95f707b28cc7fed3459eb97a
