@@ -1,7 +1,10 @@
-install.packages("tidyverse")
-install.packages("slider")
+#install.packages("tidyverse")
+#install.packages("slider")
+#remotes::install_github('bbc/bbplot')
 library("tidyverse")
 library("slider")
+library("glue")
+library("bbplot")
 
 hadcet.mean.url <- "https://www.metoffice.gov.uk/hadobs/hadcet/data/meantemp_daily_totals.txt"
 hadcet.min.url <- "https://www.metoffice.gov.uk/hadobs/hadcet/data/mintemp_daily_totals.txt"
@@ -71,7 +74,39 @@ hadcet.all.clean |>
   geom_line(data = hadcet.2013.mean, colour = "blue", alpha = 0.3) +
   scale_x_date(date_labels = "%d %b", date_breaks = "1 month") +
   labs(title = "Mean Daily Temperature, 1940-2023"
-       , subtitle = "30 day rolling average"
+       , subtitle = "30 day rolling average - blue 2013-22, red 2023"
        , x = "Day of Year"
        , y = "Temperature (°C)"
        , caption = "source: Hadley Centre Central England Temperature Series: www.metoffice.gov.uk/hadobs/hadcet/data/download.html")
+
+### v2 - up to date tracker
+current_year <- 2024
+
+hadcet.current_year.mean <- hadcet.mean.clean |>
+  filter(obs_year == current_year) |>
+  rename(mean_temp = obs_temp
+         , mean_temp_roll7 = obs_temp_roll)
+
+bbc_plot <- hadcet.all.clean |>
+  filter(obs_year >= 1900
+         , obs_year < current_year) |>
+  ggplot(aes(x = obs_caldoy, y = mean_temp_roll7, group = as.factor(obs_year))) +
+  geom_line(alpha = 0.05, show.legend = FALSE) +
+  geom_line(data = hadcet.current_year.mean, colour = "red") +
+  geom_hline(yintercept = 0, colour = "black") +
+  scale_x_date(labels = function(x){str_sub(strftime(x, format = "%b"), start = 1, end = 1)}, date_breaks = "1 month", expand = c(0, 0)) +
+  scale_y_continuous(limits = c(-5, 22), breaks = seq(-5, 22, 5), label = function(x){paste0(x, "C")}, expand = c(0, 0)) +
+#  scale_x_date(limits = c(as.Date('1940-01-01'), as.Date('1940-12-31')), date_labels = "%b", date_breaks = "1 month") +
+  labs(title = "Mean UK Daily Temperature, 1900 on"
+       , subtitle = glue("30 day rolling average, {current_year} in red")
+       , y = "Temperature (°C)"
+       , x = ""
+       , caption = "source: Hadley Centre Central England Temperature Series: www.metoffice.gov.uk/hadobs/hadcet/data/download.html") +
+  bbc_style() +
+  theme(axis.text.x = element_text(hjust = -1)
+        , axis.ticks.x = element_line())
+
+finalise_plot(bbc_plot
+              , source = "Source: Hadley Centre Central England Temperature Series"
+              , save_filepath = "hadley_daily.png")
+  
