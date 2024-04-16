@@ -110,3 +110,23 @@ finalise_plot(bbc_plot
               , source = "Source: Hadley Centre Central England Temperature Series"
               , save_filepath = "hadley_daily.png")
   
+### v3 - hockey stick
+hadcet.baseline <-
+  hadcet.mean.clean |>
+  filter(obs_year >= 1961
+         , obs_year <= 1990) |>
+  summarise(n_days = n()
+            , mean_temp = mean(obs_temp))
+
+hadcet.annual <-
+  hadcet.mean.clean |>
+  filter(obs_year < year(now())) |>
+  group_by(obs_year) |>
+  summarise(n_days = n()
+            , mean_temp = mean(obs_temp)) |>
+  mutate(baseline_var_temp = mean_temp - hadcet.baseline$mean_temp) |>
+  ggplot(aes(x = obs_year, y = baseline_var_temp)) +
+  geom_col() +
+  geom_hline(yintercept = 0) +
+  bbc_style()
+  
