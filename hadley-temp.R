@@ -108,7 +108,7 @@ bbc_plot <- hadcet.all.clean |>
 
 finalise_plot(bbc_plot
               , source = "Source: Hadley Centre Central England Temperature Series"
-              , save_filepath = "hadley_daily.png")
+              , save_filepath = "hadley_daily_temp.png")
   
 ### v3 - hockey stick
 hadcet.baseline <-

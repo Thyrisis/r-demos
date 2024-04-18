@@ -42,7 +42,7 @@ current_year <- 2024
 hadp.ew.current_year <- hadp.ew.clean |>
   filter(obs_year == current_year)
 
-hadp.ew.clean |>
+hadp.plot <- hadp.ew.clean |>
   filter(obs_year < current_year) |>
   ggplot(aes(x = obs_caldoy, y = obs_precip_mm_roll)) +
   geom_point(alpha = 0.1, size = 0.4) +
@@ -50,7 +50,7 @@ hadp.ew.clean |>
   scale_x_date(labels = function(x){str_sub(strftime(x, format = "%b"), start = 1, end = 1)}, date_breaks = "1 month", expand = c(0, 0)) +
   scale_y_continuous(label = function(x){paste0(x, "mm")}, expand = c(0, 0)) +
   labs(title = "UK Daily Precipitation, 1931 on"
-       , subtitle = glue("28 day rolling average, {current_year} in red")
+       , subtitle = glue("28 day rolling daily average, {current_year} in red")
        , y = "Precipitation (mm)"
        , x = ""
        , caption = "source: Hadley Centre England & Wales Precipitation Series: https://www.metoffice.gov.uk/hadobs/hadukp/data/daily/HadEWP_daily_totals.txt") +
@@ -58,4 +58,7 @@ hadp.ew.clean |>
   theme(axis.text.x = element_text(hjust = -1)
         , axis.ticks.x = element_line())
 
+finalise_plot(hadp.plot
+              , source = "Source: Hadley Centre England & Wales Precipitation Series"
+              , save_filepath = "hadley_daily_precip.png")
   
