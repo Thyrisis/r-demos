@@ -1,6 +1,7 @@
 library("tidyverse")
 library("slider")
 library("glue")
+#remotes::install_github("bbc/bbplot")
 library("bbplot")
 
 hadp.ew.url <- "https://www.metoffice.gov.uk/hadobs/hadukp/data/daily/HadEWP_daily_totals.txt"
