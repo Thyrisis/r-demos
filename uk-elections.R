@@ -1,4 +1,4 @@
-install.packages("sf")
+#install.packages("sf")
 library("sf")
 library("tidyverse")
 
@@ -20,9 +20,13 @@ winner <- data.raw |>
 data.clean <- data.raw |>
   left_join(winner, by = c("election", "constituency_name"))
 
-data.clean |> janitor::tabyl(election, winner)
 # initial exploration
-data.raw |> janitor::tabyl(election, boundary_set)
+data.clean |> janitor::tabyl(election, winner)
+
+data.clean |>
+  filter(is.na(winner)) |> View()
+
+data.clean |> janitor::tabyl(election, boundary_set)
 
 data.raw |>
   filter(election == 2019) |>
