@@ -44,7 +44,7 @@ hadp.ew.current_year <- hadp.ew.clean |>
   filter(obs_year == current_year)
 
 hadp.plot <- hadp.ew.clean |>
-  filter(obs_year < current_year) |>
+  filter(obs_year < current_year, !is.na(obs_precip_mm_roll)) |>
   ggplot(aes(x = obs_caldoy, y = obs_precip_mm_roll)) +
   geom_point(alpha = 0.1, size = 0.4) +
   geom_point(data = hadp.ew.current_year, colour = "red", size = 0.4) +
