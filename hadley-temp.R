@@ -130,3 +130,21 @@ hadcet.annual <-
   geom_hline(yintercept = 0) +
   bbc_style()
   
+
+### v4 - increase vs. pre-industrial
+hadcet.preindustrial <- hadcet.mean.clean |>
+       filter(obs_year <= 1872) |>
+       summarise(n_days = n()
+                 , mean_temp = mean(obs_temp))
+
+hadcet.mean.clean |>
+       filter(obs_year < year(now())) |>
+       group_by(obs_year) |>
+       summarise(n_days = n()
+                 , mean_temp = mean(obs_temp)) |>
+       mutate(baseline_var_temp = mean_temp - hadcet.preindustrial$mean_temp) |>
+       ggplot(aes(x = obs_year, y = baseline_var_temp)) +
+       geom_col() +
+       geom_hline(yintercept = 0) +
+       bbc_style()
+                   
