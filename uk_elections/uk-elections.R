@@ -58,7 +58,8 @@ data.clean |>
   geom_point(position = "jitter", alpha = 0.5) +
   facet_wrap(~region_name, scales = "free_x") +
   scale_colour_party() +
-  labs(title = "2019 UK General Election")
+  #labs(title = "2019 UK General Election")
+  labs(title = "2024 UK General Election")
 
 # share of contested
 contested <- constituencies |>
@@ -75,7 +76,8 @@ contested |>
   summarise(across(.cols = starts_with("votes"), .fns = ~sum(.x, na.rm = TRUE))) |>
   rowwise() |>
   mutate(total_votes = sum(across(everything()))
-        , pct_votes = votes_SNP / total_votes)
+        , pct_votes = votes_SNP / total_votes) |>
+  select(votes_SNP, total_votes, pct_votes)
 
 
 # clean data
