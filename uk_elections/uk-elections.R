@@ -111,5 +111,13 @@ data.raw |>
 , natSW_votes = sum(natSW_votes, na.rm = TRUE)
 , oth_votes = sum(oth_votes, na.rm = TRUE))
 
+constituencies |>
+  filter(winner_party_name == 'Conservative') |>
+  arrange(desc(winner_share)) |>
+  #select(ons_id, constituency_name, winner_first_name, winner_surname, winner_share) |>
+  head(50) |>
+  ungroup() |>
+  summarise(min(winner_share))
+
 # get shapes
 
