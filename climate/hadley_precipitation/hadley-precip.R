@@ -17,7 +17,7 @@ hadp.read.fn <- function(url) {
            , col.names = c('obs_precip_mm'))
 }
 
-hadp.clean.fn <- function(tbl, roll = 28) {
+hadp.clean.fn <- function(tbl, roll = 30) {
   tbl |>
     as_tibble() |>
     rename(obs_date = row.names) |>
@@ -26,6 +26,7 @@ hadp.clean.fn <- function(tbl, roll = 28) {
            , obs_year = year(obs_date)
            , obs_doy = yday(obs_date)
            , obs_precip_mm_roll = slide_dbl(obs_precip_mm, mean, .before = roll, .complete = TRUE)
+           , obs_precip_mm_rollsum = slide_dbl(obs_precip_mm, sum, .before = roll, .complete = TRUE)
            , obs_caldoy = as.Date(obs_doy - 1, origin = "1940-01-01"))
 }
 
@@ -63,3 +64,9 @@ finalise_plot(hadp.plot
               , source = "Source: Hadley Centre England & Wales Precipitation Series"
               , save_filepath = "hadley_daily_precip.png")
   
+# test alternative plot
+hadp.ew.clean |>
+  filter(obs_year < current_year, obs_precip_mm > 0) |>
+  ggplot(aes(x = obs_caldoy, y = obs_precip_mm)) +
+  geom_point(alpha = 0.01, size = 0.4) +
+  geom_point(data = hadp.ew.current_year, colour = "red", size = 0.4)
