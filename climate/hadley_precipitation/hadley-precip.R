@@ -47,8 +47,8 @@ hadp.ew.current_year <- hadp.ew.clean |>
 hadp.plot <- hadp.ew.clean |>
   filter(obs_year < current_year, !is.na(obs_precip_mm_roll)) |>
   ggplot(aes(x = obs_caldoy, y = obs_precip_mm_roll)) +
-  geom_point(alpha = 0.1, size = 0.4) +
-  geom_point(data = hadp.ew.current_year, colour = "red", size = 0.4) +
+  geom_point(alpha = 0.1, size = 0.6) +
+  geom_point(data = hadp.ew.current_year, colour = "red", size = 0.6) +
   scale_x_date(labels = function(x){str_sub(strftime(x, format = "%b"), start = 1, end = 1)}, date_breaks = "1 month", expand = c(0, 0)) +
   scale_y_continuous(label = function(x){paste0(x, "mm")}, expand = c(0, 0)) +
   labs(title = "UK Daily Precipitation, 1931 on"
@@ -62,7 +62,7 @@ hadp.plot <- hadp.ew.clean |>
 
 finalise_plot(hadp.plot
               , source = "Source: Hadley Centre England & Wales Precipitation Series"
-              , save_filepath = "hadley_daily_precip.png")
+              , save_filepath = "./climate/hadley_precipitation/hadley_daily_precip.png")
   
 # test alternative plot
 hadp.ew.clean |>
