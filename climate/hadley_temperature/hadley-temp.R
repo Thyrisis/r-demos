@@ -1,5 +1,7 @@
 #install.packages("tidyverse")
 #install.packages("slider")
+#install.packages("remotes")
+#install.packages("installr")
 #remotes::install_github('bbc/bbplot')
 library("tidyverse")
 library("slider")
