@@ -82,7 +82,7 @@ hadcet.all.clean |>
        , caption = "source: Hadley Centre Central England Temperature Series: www.metoffice.gov.uk/hadobs/hadcet/data/download.html")
 
 ### v2 - up to date tracker
-current_year <- 2024
+current_year <- 2025
 
 hadcet.current_year.mean <- hadcet.mean.clean |>
   filter(obs_year == current_year) |>
@@ -148,5 +148,10 @@ hadcet.mean.clean |>
        ggplot(aes(x = obs_year, y = baseline_var_temp)) +
        geom_col() +
        geom_hline(yintercept = 0) +
+              labs(title = "Mean UK Annual Temperature"
+       , subtitle = glue("vs. baseline pre 1872")
+       , y = "Temperature (°C)"
+       , x = ""
+       , caption = "source: Hadley Centre Central England Temperature Series: www.metoffice.gov.uk/hadobs/hadcet/data/download.html") +
        bbc_style()
                    
