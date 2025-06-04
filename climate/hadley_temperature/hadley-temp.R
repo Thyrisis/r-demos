@@ -132,6 +132,9 @@ hadcet.annual <-
   geom_hline(yintercept = 0) +
   bbc_style()
   
+finalise_plot(hadcet.annual
+              , source = "Source: Hadley Centre Central England Temperature Series"
+              )
 
 ### v4 - increase vs. pre-industrial
 hadcet.preindustrial <- hadcet.mean.clean |>
