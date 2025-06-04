@@ -39,7 +39,7 @@ hadp.s.clean <- hadp.clean.fn(hadp.s.raw)
 hadp.ni.raw <- hadp.read.fn(hadp.ni.url)
 hadp.ni.clean <- hadp.clean.fn(hadp.ni.raw)
 
-current_year <- 2024
+current_year <- 2025
 
 hadp.ew.current_year <- hadp.ew.clean |>
   filter(obs_year == current_year)
