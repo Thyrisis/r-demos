@@ -61,8 +61,8 @@ process(input_file)
 
 
 # part 2
-def process2(input_lst):
-  output_lst = input_lst
+def identify_reachable(input_lst):
+  output_lst = list(input_lst)
 
   for row_n, row_val in enumerate(input_lst):
     row_lst = list(row_val)
@@ -91,4 +91,20 @@ def process2(input_lst):
   return output_lst
 
 
-process2(example)
+def process2(input_lst):
+  removed_count = 0
+  output_lst = list(input_lst)
+  
+  while True:
+    output_lst = identify_reachable(output_lst)
+    new_removed_count = "".join(output_lst).count('x')
+    if new_removed_count == removed_count:
+      break
+    else:
+      removed_count = new_removed_count
+      
+  return output_lst
+  
+
+"".join(process2(example)).count('x')
+"".join(process2(input_file)).count('x')
