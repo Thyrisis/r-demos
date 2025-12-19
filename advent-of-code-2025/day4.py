@@ -30,7 +30,7 @@ def idx_null(lst, idx, default='.'):
 def process(input_lst):
   
   access_count = 0
-  
+
   for row_n, row_val in enumerate(input_lst):
     for col_n, cell_val in enumerate(row_val):
       # ignore empty locations
@@ -58,3 +58,37 @@ input_file = read_input("advent-of-code-2025/day4-input.txt")
 
 process(example)
 process(input_file)
+
+
+# part 2
+def process2(input_lst):
+  output_lst = input_lst
+
+  for row_n, row_val in enumerate(input_lst):
+    row_lst = list(row_val)
+
+    for col_n, cell_val in enumerate(row_lst):
+      # ignore empty locations
+      if cell_val == '.':
+        continue
+
+      # use custom function to handle beyond edges as always empty (".")
+      # concatenate 8 surrounding values
+      
+      if (idx_null(idx_null(input_lst, row_n), col_n-1) +
+          idx_null(idx_null(input_lst, row_n-1), col_n-1) +
+          idx_null(idx_null(input_lst, row_n-1), col_n) +
+          idx_null(idx_null(input_lst, row_n-1), col_n+1) +
+          idx_null(idx_null(input_lst, row_n), col_n+1) +
+          idx_null(idx_null(input_lst, row_n+1), col_n+1) +
+          idx_null(idx_null(input_lst, row_n+1), col_n) +
+          idx_null(idx_null(input_lst, row_n+1), col_n-1)
+         ).count('@') < 4:
+           row_lst[col_n] = 'x'
+           
+    output_lst[row_n] = "".join(row_lst)
+  
+  return output_lst
+
+
+process2(example)
